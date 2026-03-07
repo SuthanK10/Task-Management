@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management REST API</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Task Flow</h1>
+            <nav id="nav-menu" class="hidden">
+                <span id="welcome-message"></span>
+                <button id="logout-btn">Logout</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Auth Views -->
+            <section id="auth-section">
+                <div class="auth-container">
+                    <h2 id="auth-title">Login to Your Account</h2>
+                    <form id="auth-form">
+                        <div class="input-group hidden" id="name-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" placeholder="John Doe">
+                        </div>
+                        <div class="input-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required placeholder="john@example.com">
+                        </div>
+                        <div class="input-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required placeholder="********">
+                        </div>
+                        <div class="input-group hidden" id="password-confirm-group">
+                            <label for="password_confirmation">Confirm Password</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" placeholder="********">
+                        </div>
+                        <p id="auth-error" class="error-msg hidden"></p>
+                        <button type="submit" id="auth-submit-btn">Login</button>
+                        <p class="toggle-auth">
+                            <span id="auth-toggle-text">Don't have an account? <a href="#" id="toggle-auth-link">Register here</a></span>
+                        </p>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Dashboard Views -->
+            <section id="dashboard-section" class="hidden">
+                <div class="dashboard-header">
+                    <h2>My Tasks</h2>
+                    <button id="new-task-btn" class="primary-btn">+ New Task</button>
+                </div>
+
+                <div class="task-controls">
+                    <div class="filter-group">
+                        <label for="filter-status">Filter:</label>
+                        <select id="filter-status">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <input type="text" id="search-input" placeholder="Search tasks...">
+                        <button id="search-btn">Search</button>
+                    </div>
+                </div>
+
+                <div class="task-list" id="task-list">
+                    <!-- Tasks injected here via JS -->
+                </div>
+
+                <div class="pagination-controls hidden" id="pagination-controls">
+                    <button id="prev-btn" disabled>&laquo; Prev</button>
+                    <span id="page-info">Page 1 of 1</span>
+                    <button id="next-btn" disabled>Next &raquo;</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2 id="modal-title">Create Task</h2>
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+                <div class="input-group">
+                    <label for="task-title">Title</label>
+                    <input type="text" id="task-title" required placeholder="Task title">
+                </div>
+                <div class="input-group">
+                    <label for="task-desc">Description</label>
+                    <textarea id="task-desc" rows="3" placeholder="Task description..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="task-status">Status</label>
+                    <select id="task-status">
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="task-due">Due Date</label>
+                    <input type="date" id="task-due">
+                </div>
+                <p id="task-error" class="error-msg hidden"></p>
+                <div class="modal-actions">
+                    <button type="submit" class="primary-btn" id="task-submit-btn">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
