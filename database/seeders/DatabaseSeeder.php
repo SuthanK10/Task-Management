@@ -15,11 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Generate 5 random generic users with 3 tasks each
+        User::factory(5)->hasTasks(3)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Create a specific Demo User for the recruiter to test easily
+        $demoUser = User::factory()->create([
+            'name' => 'Recruiter Demo',
+            'email' => 'demo@taskflow.io',
+            'password' => bcrypt('password123'),
+        ]);
+
+        // Attach 15 random tasks uniquely to this demo user
+        \App\Models\Task::factory(15)->create([
+            'user_id' => $demoUser->id
         ]);
     }
 }
