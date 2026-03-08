@@ -1,19 +1,13 @@
 const API_BASE = '/api';
-
-// State
 let token = localStorage.getItem('auth_token') || null;
 let user = JSON.parse(localStorage.getItem('user')) || null;
 let isLoginMode = true; 
 let currentPage = 1;
 let currentFilters = { status: '', search: '' };
-
-// DOM Elements
 const authSection = document.getElementById('auth-section');
 const dashSection = document.getElementById('dashboard-section');
 const navMenu = document.getElementById('nav-menu');
 const welcomeMsg = document.getElementById('welcome-message');
-
-// Forms & Inputs
 const authForm = document.getElementById('auth-form');
 const authSubmitBtn = document.getElementById('auth-submit-btn');
 const toggleAuthLink = document.getElementById('toggle-auth-link');
@@ -31,8 +25,6 @@ const passwordInput = document.getElementById('password');
 const confirmInput = document.getElementById('password_confirmation');
 
 const logoutBtn = document.getElementById('logout-btn');
-
-// Task DOM
 const taskList = document.getElementById('task-list');
 const newTaskBtn = document.getElementById('new-task-btn');
 const taskModal = document.getElementById('task-modal');
@@ -41,8 +33,6 @@ const cancelModalBtn = document.getElementById('cancel-modal');
 const taskForm = document.getElementById('task-form');
 const taskError = document.getElementById('task-error');
 const taskErrorText = document.getElementById('task-error-text');
-
-// Pagination/Filter DOM
 const searchBtn = document.getElementById('search-btn');
 const searchInput = document.getElementById('search-input');
 const statusFilterTrigger = document.getElementById('status-filter-trigger');
@@ -51,20 +41,14 @@ const statusText = document.getElementById('selected-status-text');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const pageInfo = document.getElementById('page-info');
-
-// Modal Dropdown
 const modalStatusTrigger = document.getElementById('modal-status-trigger');
 const modalStatusOptions = document.getElementById('modal-status-options');
 const modalStatusText = document.getElementById('modal-status-text');
 const taskStatusInput = document.getElementById('task-status');
-
-// Initialization
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     attachEventListeners();
 });
-
-// --- Auth UI Management ---
 function checkAuth() {
     if (token) {
         showDashboard();
@@ -113,8 +97,6 @@ function toggleAuthMode(e) {
     }
     document.getElementById('toggle-auth-link').addEventListener('click', toggleAuthMode);
 }
-
-// --- Fetch Wrapper ---
 async function apiRequest(endpoint, method = 'GET', body = null) {
     const headers = {
         'Accept': 'application/json',
@@ -131,7 +113,7 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
         
         if (!response.ok) {
             if (response.status === 401) {
-                handleLogout(); // Auto-logout if token expired
+                handleLogout();
             }
             throw new Error(data.message || 'API Request Failed');
         }
@@ -140,8 +122,6 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
         throw error;
     }
 }
-
-// --- Auth Actions ---
 async function handleAuth(e) {
     e.preventDefault();
     authError.classList.add('hidden');
@@ -172,7 +152,7 @@ async function handleAuth(e) {
 async function handleLogout() {
     try {
         if (token) await apiRequest('/logout', 'POST'); 
-    } catch (e) {} // ignore errors
+    } catch (e) {}
     
     token = null;
     user = null;
@@ -180,8 +160,6 @@ async function handleLogout() {
     localStorage.removeItem('user');
     checkAuth();
 }
-
-// --- Task Actions ---
 async function fetchTasks(page = 1) {
     try {
         taskList.innerHTML = `<div class="loading-state"><i class='bx bx-loader-alt bx-spin'></i> Loading tasks...</div>`;
@@ -264,8 +242,6 @@ async function deleteTask(id) {
         alert(e.message);
     }
 }
-
-// --- Task UI Helpers ---
 function openNewModal() {
     taskForm.reset();
     document.getElementById('task-id').value = '';
@@ -293,8 +269,6 @@ async function openEditModal(id) {
         document.getElementById('task-desc').value = task.description || '';
         taskStatusInput.value = task.status;
         modalStatusText.textContent = task.status === 'completed' ? '✅ Completed' : '📌 Pending';
-        
-        // update selected visual state in modal custom dropdown
         document.querySelectorAll('#modal-status-options .custom-option').forEach(opt => {
             opt.classList.remove('selected');
             if(opt.dataset.value === task.status) opt.classList.add('selected');
@@ -310,8 +284,6 @@ async function openEditModal(id) {
 function closeModal() {
     taskModal.classList.add('hidden');
 }
-
-// --- Pagination & Filtering Helpers ---
 function updatePagination(meta) {
     currentPage = meta.current_page;
     pageInfo.textContent = `Page ${meta.current_page} of ${Math.max(meta.last_page, 1)}`;
@@ -338,8 +310,6 @@ function handleFilter(value, text) {
     currentPage = 1;
     fetchTasks();
 }
-
-// --- Event Listeners ---
 function attachEventListeners() {
     toggleAuthLink.addEventListener('click', toggleAuthMode);
     authForm.addEventListener('submit', handleAuth);
@@ -352,13 +322,11 @@ function attachEventListeners() {
 
     searchBtn.addEventListener('click', handleSearch);
     searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleSearch(); });
-
-    // Custom Select: Main Filter
     statusFilterTrigger.addEventListener('click', (e) => {
         e.stopPropagation();
         statusFilterTrigger.parentElement.classList.toggle('open');
         statusFilterOptions.classList.toggle('hidden');
-        modalStatusOptions.classList.add('hidden'); // close others
+        modalStatusOptions.classList.add('hidden');
     });
 
     document.querySelectorAll('#status-options .custom-option').forEach(opt => {
@@ -371,13 +339,11 @@ function attachEventListeners() {
             e.stopPropagation();
         });
     });
-
-    // Custom Select: Modal Status
     modalStatusTrigger.addEventListener('click', (e) => {
         e.stopPropagation();
         modalStatusTrigger.parentElement.classList.toggle('open');
         modalStatusOptions.classList.toggle('hidden');
-        statusFilterOptions.classList.add('hidden'); // close others
+        statusFilterOptions.classList.add('hidden');
     });
 
     document.querySelectorAll('#modal-status-options .custom-option').forEach(opt => {
@@ -391,8 +357,6 @@ function attachEventListeners() {
             e.stopPropagation();
         });
     });
-
-    // Close custom dropdowns on outside click
     document.addEventListener('click', () => {
         statusFilterOptions.classList.add('hidden');
         statusFilterTrigger.parentElement.classList.remove('open');

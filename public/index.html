@@ -5,24 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>TaskFlow .io</title>
     
-    <!-- Modern Fonts (Outfit) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Abstract animated background -->
     <div class="bg-shape bg-shape-1"></div>
     <div class="bg-shape bg-shape-2"></div>
 
     <div id="app">
 
-        <!-- Authentication Section (Perfectly Centered) -->
         <section id="auth-section" class="fade-in full-center-wrapper">
             <div class="auth-brand-logo">
                 <i class='bx bx-check-shield'></i>
@@ -69,9 +65,7 @@
             </div>
         </section>
 
-        <!-- Dashboard Section -->
         <section id="dashboard-section" class="hidden fade-in">
-            <!-- Header (Visible only on Dashboard) -->
             <header class="glass-header">
                 <div class="logo">
                     <i class='bx bx-check-shield'></i>
@@ -121,7 +115,6 @@
             </div>
 
             <div class="task-list" id="task-list">
-                <!-- Tasks injected via JS -->
                 <div class="loading-state">
                     <i class='bx bx-loader-alt bx-spin'></i> Loading tasks...
                 </div>
@@ -139,7 +132,6 @@
         </section>
     </div>
 
-    <!-- Task Modal Background -->
     <div id="task-modal" class="modal hidden">
         <div class="modal-content glass-card pop-in">
             <button class="close-btn" id="close-modal"><i class='bx bx-x'></i></button>

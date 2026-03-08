@@ -9,9 +9,6 @@ use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $query = $request->user()->tasks()->latest();
@@ -37,9 +34,6 @@ class TaskController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreTaskRequest $request)
     {
         $task = $request->user()->tasks()->create($request->validated());
@@ -51,9 +45,6 @@ class TaskController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Request $request, string $id)
     {
         $task = $request->user()->tasks()->find($id);
@@ -72,9 +63,6 @@ class TaskController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTaskRequest $request, string $id)
     {
         $task = $request->user()->tasks()->find($id);
@@ -95,9 +83,6 @@ class TaskController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request, string $id)
     {
         $task = $request->user()->tasks()->find($id);
