@@ -40,6 +40,7 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: flex-start; /* Always align to start, flex-grow will center auth */
   position: relative;
   overflow-x: hidden;
   /* Add a subtle bright gradient mesh to the whole background */
@@ -82,10 +83,47 @@ body {
 #app {
   width: 100%;
   max-width: 1000px;
+  min-height: 100vh;
   padding: 2.5rem 2rem;
   z-index: 10;
   display: flex;
   flex-direction: column;
+}
+
+/* Full Center Wrapper for Auth Screen */
+.full-center-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.auth-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 2.5rem;
+}
+
+.auth-brand-logo i {
+  color: var(--primary);
+  font-size: 3rem;
+  background: -webkit-linear-gradient(45deg, var(--primary), #FFA07A);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-brand-logo h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.auth-brand-logo h1 span {
+  color: var(--primary);
+  font-weight: 900;
 }
 
 .hidden {
