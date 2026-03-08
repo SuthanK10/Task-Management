@@ -153,6 +153,7 @@ body {
   font-size: 2.2rem;
   background: -webkit-linear-gradient(45deg, var(--primary), #FFA07A);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .logo span {
@@ -562,6 +563,7 @@ input:focus, textarea:focus, select:focus {
   margin-bottom: 1.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
