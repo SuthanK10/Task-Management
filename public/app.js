@@ -45,10 +45,18 @@ const taskErrorText = document.getElementById('task-error-text');
 // Pagination/Filter DOM
 const searchBtn = document.getElementById('search-btn');
 const searchInput = document.getElementById('search-input');
-const statusFilter = document.getElementById('filter-status');
+const statusFilterTrigger = document.getElementById('status-filter-trigger');
+const statusFilterOptions = document.getElementById('status-options');
+const statusText = document.getElementById('selected-status-text');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const pageInfo = document.getElementById('page-info');
+
+// Modal Dropdown
+const modalStatusTrigger = document.getElementById('modal-status-trigger');
+const modalStatusOptions = document.getElementById('modal-status-options');
+const modalStatusText = document.getElementById('modal-status-text');
+const taskStatusInput = document.getElementById('task-status');
 
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
@@ -261,6 +269,12 @@ async function deleteTask(id) {
 function openNewModal() {
     taskForm.reset();
     document.getElementById('task-id').value = '';
+    taskStatusInput.value = 'pending';
+    modalStatusText.textContent = '📌 Pending';
+    document.querySelectorAll('#modal-status-options .custom-option').forEach(opt => {
+        opt.classList.remove('selected');
+        if(opt.dataset.value === 'pending') opt.classList.add('selected');
+    });
     document.getElementById('modal-title').textContent = 'Create New Task';
     taskError.classList.add('hidden');
     taskModal.classList.remove('hidden');
@@ -277,7 +291,14 @@ async function openEditModal(id) {
         document.getElementById('task-id').value = task.id;
         document.getElementById('task-title').value = task.title;
         document.getElementById('task-desc').value = task.description || '';
-        document.getElementById('task-status').value = task.status;
+        taskStatusInput.value = task.status;
+        modalStatusText.textContent = task.status === 'completed' ? '✅ Completed' : '📌 Pending';
+        
+        // update selected visual state in modal custom dropdown
+        document.querySelectorAll('#modal-status-options .custom-option').forEach(opt => {
+            opt.classList.remove('selected');
+            if(opt.dataset.value === task.status) opt.classList.add('selected');
+        });
         document.getElementById('task-due').value = task.due_date || '';
         document.getElementById('modal-title').textContent = 'Edit Task';
     } catch (error) {
@@ -311,8 +332,9 @@ function handleSearch() {
     fetchTasks();
 }
 
-function handleFilter() {
-    currentFilters.status = statusFilter.value;
+function handleFilter(value, text) {
+    statusText.textContent = text;
+    currentFilters.status = value;
     currentPage = 1;
     fetchTasks();
 }
@@ -330,7 +352,53 @@ function attachEventListeners() {
 
     searchBtn.addEventListener('click', handleSearch);
     searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleSearch(); });
-    statusFilter.addEventListener('change', handleFilter);
+
+    // Custom Select: Main Filter
+    statusFilterTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        statusFilterTrigger.parentElement.classList.toggle('open');
+        statusFilterOptions.classList.toggle('hidden');
+        modalStatusOptions.classList.add('hidden'); // close others
+    });
+
+    document.querySelectorAll('#status-options .custom-option').forEach(opt => {
+        opt.addEventListener('click', (e) => {
+            document.querySelectorAll('#status-options .custom-option').forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+            handleFilter(opt.dataset.value, opt.textContent);
+            statusFilterOptions.classList.add('hidden');
+            statusFilterTrigger.parentElement.classList.remove('open');
+            e.stopPropagation();
+        });
+    });
+
+    // Custom Select: Modal Status
+    modalStatusTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        modalStatusTrigger.parentElement.classList.toggle('open');
+        modalStatusOptions.classList.toggle('hidden');
+        statusFilterOptions.classList.add('hidden'); // close others
+    });
+
+    document.querySelectorAll('#modal-status-options .custom-option').forEach(opt => {
+        opt.addEventListener('click', (e) => {
+            document.querySelectorAll('#modal-status-options .custom-option').forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+            taskStatusInput.value = opt.dataset.value;
+            modalStatusText.textContent = opt.textContent;
+            modalStatusOptions.classList.add('hidden');
+            modalStatusTrigger.parentElement.classList.remove('open');
+            e.stopPropagation();
+        });
+    });
+
+    // Close custom dropdowns on outside click
+    document.addEventListener('click', () => {
+        statusFilterOptions.classList.add('hidden');
+        statusFilterTrigger.parentElement.classList.remove('open');
+        modalStatusOptions.classList.add('hidden');
+        modalStatusTrigger.parentElement.classList.remove('open');
+    });
 
     prevBtn.addEventListener('click', () => fetchTasks(currentPage - 1));
     nextBtn.addEventListener('click', () => fetchTasks(currentPage + 1));

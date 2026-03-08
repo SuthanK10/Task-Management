@@ -38,9 +38,7 @@ body {
   background-color: var(--bg-dark);
   color: var(--text-main);
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Always align to start, flex-grow will center auth */
+  margin: 0;
   position: relative;
   overflow-x: hidden;
   /* Add a subtle bright gradient mesh to the whole background */
@@ -84,6 +82,7 @@ body {
   width: 100%;
   max-width: 1000px;
   min-height: 100vh;
+  margin: 0 auto;
   padding: 2.5rem 2rem;
   z-index: 10;
   display: flex;
@@ -465,21 +464,74 @@ input:focus, textarea:focus, select:focus {
   font-size: 1.3rem;
 }
 
-.filter-group select {
-  padding: 0.7rem 1.2rem;
-  width: 160px;
-  background: white;
-  cursor: pointer;
-  appearance: none;
-  font-weight: 600;
-  color: var(--text-main);
+.custom-select-wrapper {
+  position: relative;
+  user-select: none;
 }
 
-.select-wrapper {
-  position: relative;
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1.2rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  cursor: pointer;
+  min-width: 160px;
+  font-weight: 600;
+  transition: var(--transition);
+  color: var(--text-main);
+  gap: 0.5rem;
 }
-.select-wrapper::after {
+
+.custom-select-trigger:hover, .custom-select-wrapper.open .custom-select-trigger {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+}
+
+.custom-select-trigger .arrow {
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.custom-select-wrapper.open .custom-select-trigger .arrow {
+  transform: rotate(180deg);
+}
+
+.custom-options {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  overflow: hidden;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-options.hidden {
   display: none;
+}
+
+.custom-option {
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.custom-option:hover {
+  background: var(--bg-dark);
+}
+
+.custom-option.selected {
+  background: var(--primary);
+  color: white;
 }
 
 .search-group {
@@ -498,6 +550,12 @@ input:focus, textarea:focus, select:focus {
   padding: 0.8rem 3.5rem 0.8rem 3.2rem;
   width: 100%;
   background: white;
+}
+
+.search-group .btn-icon i {
+  position: static;
+  margin: 0;
+  padding: 0;
 }
 
 .btn-icon {

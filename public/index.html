@@ -99,13 +99,19 @@
             </div>
 
             <div class="task-controls glass-card">
-                <div class="filter-group">
-                    <i class='bx bx-filter-alt'></i>
-                    <select id="filter-status">
-                        <option value="">All Statuses</option>
-                        <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
-                    </select>
+                <div class="filter-group custom-select-wrapper" id="status-dropdown">
+                    <div class="custom-select-trigger" id="status-filter-trigger">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <i class='bx bx-filter-alt'></i>
+                            <span id="selected-status-text">All Statuses</span>
+                        </div>
+                        <i class='bx bx-chevron-down arrow'></i>
+                    </div>
+                    <div class="custom-options hidden" id="status-options">
+                        <div class="custom-option selected" data-value="">All Statuses</div>
+                        <div class="custom-option" data-value="pending">Pending</div>
+                        <div class="custom-option" data-value="completed">Completed</div>
+                    </div>
                 </div>
                 <div class="search-group">
                     <i class='bx bx-search'></i>
@@ -159,13 +165,18 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group half">
-                        <label for="task-status">Status</label>
-                        <div class="input-wrapper select-wrapper">
-                            <select id="task-status">
-                                <option value="pending">📌 Pending</option>
-                                <option value="completed">✅ Completed</option>
-                            </select>
+                        <label>Status</label>
+                        <div class="custom-select-wrapper" id="modal-status-dropdown">
+                            <div class="custom-select-trigger" id="modal-status-trigger">
+                                <span id="modal-status-text">📌 Pending</span>
+                                <i class='bx bx-chevron-down arrow'></i>
+                            </div>
+                            <div class="custom-options hidden" id="modal-status-options">
+                                <div class="custom-option selected" data-value="pending">📌 Pending</div>
+                                <div class="custom-option" data-value="completed">✅ Completed</div>
+                            </div>
                         </div>
+                        <input type="hidden" id="task-status" value="pending">
                     </div>
                     <div class="form-group half">
                         <label for="task-due">Due Date (Optional)</label>
