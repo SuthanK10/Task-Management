@@ -1,62 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Management REST API</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TaskFlow .io</title>
+    
+    <!-- Modern Fonts (Outfit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Abstract animated background -->
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+
     <div id="app">
-        <header>
-            <h1>Task Flow</h1>
-            <nav id="nav-menu" class="hidden">
-                <span id="welcome-message"></span>
-                <button id="logout-btn">Logout</button>
+        <!-- Header -->
+        <header class="glass-header">
+            <div class="logo">
+                <i class='bx bx-check-shield'></i>
+                <h1>Task<span>Flow</span></h1>
+            </div>
+            <nav id="nav-menu" class="hidden nav-actions">
+                <div class="user-chip">
+                    <i class='bx bx-user-circle'></i>
+                    <span id="welcome-message"></span>
+                </div>
+                <button id="logout-btn" class="btn-ghost">
+                    <i class='bx bx-log-out'></i> Logout
+                </button>
             </nav>
         </header>
 
         <main>
-            <!-- Auth Views -->
-            <section id="auth-section">
-                <div class="auth-container">
-                    <h2 id="auth-title">Login to Your Account</h2>
-                    <form id="auth-form">
+            <!-- Authentication Section -->
+            <section id="auth-section" class="fade-in">
+                <div class="auth-container glass-card">
+                    <div class="auth-icon-wrap">
+                        <i class='bx bx-lock-alt'></i>
+                    </div>
+                    <h2 id="auth-title">Welcome Back</h2>
+                    <p class="auth-subtitle" id="auth-subtitle">Log in to manage your tasks beautifully.</p>
+                    
+                    <form id="auth-form" class="auth-form">
                         <div class="input-group hidden" id="name-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" name="name" placeholder="John Doe">
+                            <i class='bx bx-user'></i>
+                            <input type="text" id="name" name="name" placeholder="Full Name">
                         </div>
                         <div class="input-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required placeholder="john@example.com">
+                            <i class='bx bx-envelope'></i>
+                            <input type="email" id="email" name="email" required placeholder="Email Address">
                         </div>
                         <div class="input-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" required placeholder="********">
+                            <i class='bx bx-key'></i>
+                            <input type="password" id="password" name="password" required placeholder="Password">
                         </div>
                         <div class="input-group hidden" id="password-confirm-group">
-                            <label for="password_confirmation">Confirm Password</label>
-                            <input type="password" id="password_confirmation" name="password_confirmation" placeholder="********">
+                            <i class='bx bx-check-double'></i>
+                            <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password">
                         </div>
-                        <p id="auth-error" class="error-msg hidden"></p>
-                        <button type="submit" id="auth-submit-btn">Login</button>
-                        <p class="toggle-auth">
-                            <span id="auth-toggle-text">Don't have an account? <a href="#" id="toggle-auth-link">Register here</a></span>
-                        </p>
+                        
+                        <div id="auth-error" class="error-msg hidden">
+                            <i class='bx bx-error-circle'></i> <span id="auth-error-text"></span>
+                        </div>
+
+                        <button type="submit" id="auth-submit-btn" class="btn-primary glow-effect">
+                            Access Account <i class='bx bx-right-arrow-alt'></i>
+                        </button>
                     </form>
+
+                    <div class="auth-footer">
+                        <span id="auth-toggle-text">Don't have an account? <a href="#" id="toggle-auth-link">Register here</a></span>
+                    </div>
                 </div>
             </section>
 
-            <!-- Dashboard Views -->
-            <section id="dashboard-section" class="hidden">
-                <div class="dashboard-header">
-                    <h2>My Tasks</h2>
-                    <button id="new-task-btn" class="primary-btn">+ New Task</button>
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="hidden fade-in">
+                <div class="dashboard-header flex-between">
+                    <div>
+                        <h2 class="dash-title">Your Workspace</h2>
+                        <p class="dash-subtitle">Organize, track, and complete.</p>
+                    </div>
+                    <button id="new-task-btn" class="btn-primary glow-effect">
+                        <i class='bx bx-plus'></i> New Task
+                    </button>
                 </div>
 
-                <div class="task-controls">
+                <div class="task-controls glass-card">
                     <div class="filter-group">
-                        <label for="filter-status">Filter:</label>
+                        <i class='bx bx-filter-alt'></i>
                         <select id="filter-status">
                             <option value="">All Statuses</option>
                             <option value="pending">Pending</option>
@@ -64,53 +103,83 @@
                         </select>
                     </div>
                     <div class="search-group">
+                        <i class='bx bx-search'></i>
                         <input type="text" id="search-input" placeholder="Search tasks...">
-                        <button id="search-btn">Search</button>
+                        <button id="search-btn" class="btn-icon"><i class='bx bx-right-arrow-alt'></i></button>
                     </div>
                 </div>
 
                 <div class="task-list" id="task-list">
-                    <!-- Tasks injected here via JS -->
+                    <!-- Tasks injected via JS -->
+                    <div class="loading-state">
+                        <i class='bx bx-loader-alt bx-spin'></i> Loading tasks...
+                    </div>
                 </div>
 
                 <div class="pagination-controls hidden" id="pagination-controls">
-                    <button id="prev-btn" disabled>&laquo; Prev</button>
-                    <span id="page-info">Page 1 of 1</span>
-                    <button id="next-btn" disabled>Next &raquo;</button>
+                    <button id="prev-btn" class="btn-secondary" disabled>
+                        <i class='bx bx-chevron-left'></i>
+                    </button>
+                    <span id="page-info" class="page-badge">Page 1</span>
+                    <button id="next-btn" class="btn-secondary" disabled>
+                        <i class='bx bx-chevron-right'></i>
+                    </button>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- Task Modal -->
+    <!-- Task Modal Background -->
     <div id="task-modal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-btn" id="close-modal">&times;</span>
-            <h2 id="modal-title">Create Task</h2>
+        <div class="modal-content glass-card pop-in">
+            <button class="close-btn" id="close-modal"><i class='bx bx-x'></i></button>
+            
+            <div class="modal-header">
+                <i class='bx bx-task modal-icon'></i>
+                <h2 id="modal-title">Create Task</h2>
+            </div>
+            
             <form id="task-form">
                 <input type="hidden" id="task-id">
-                <div class="input-group">
-                    <label for="task-title">Title</label>
-                    <input type="text" id="task-title" required placeholder="Task title">
+                <div class="form-group">
+                    <label for="task-title">Task Title</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="task-title" required placeholder="What needs to be done?">
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="task-desc">Description</label>
-                    <textarea id="task-desc" rows="3" placeholder="Task description..."></textarea>
+                <div class="form-group">
+                    <label for="task-desc">Description (Optional)</label>
+                    <div class="input-wrapper">
+                        <textarea id="task-desc" rows="3" placeholder="Add some details..."></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="task-status">Status</label>
-                    <select id="task-status">
-                        <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="task-status">Status</label>
+                        <div class="input-wrapper select-wrapper">
+                            <select id="task-status">
+                                <option value="pending">📌 Pending</option>
+                                <option value="completed">✅ Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group half">
+                        <label for="task-due">Due Date (Optional)</label>
+                        <div class="input-wrapper">
+                            <input type="date" id="task-due">
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="task-due">Due Date</label>
-                    <input type="date" id="task-due">
+
+                <div id="task-error" class="error-msg hidden">
+                    <i class='bx bx-error-circle'></i> <span id="task-error-text"></span>
                 </div>
-                <p id="task-error" class="error-msg hidden"></p>
+                
                 <div class="modal-actions">
-                    <button type="submit" class="primary-btn" id="task-submit-btn">Save Task</button>
+                    <button type="button" class="btn-secondary" id="cancel-modal">Cancel</button>
+                    <button type="submit" class="btn-primary glow-effect" id="task-submit-btn">
+                        Save Task <i class='bx bx-check'></i>
+                    </button>
                 </div>
             </form>
         </div>

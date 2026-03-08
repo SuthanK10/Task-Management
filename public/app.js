@@ -18,7 +18,9 @@ const authForm = document.getElementById('auth-form');
 const authSubmitBtn = document.getElementById('auth-submit-btn');
 const toggleAuthLink = document.getElementById('toggle-auth-link');
 const authTitle = document.getElementById('auth-title');
+const authSubtitle = document.getElementById('auth-subtitle');
 const authError = document.getElementById('auth-error');
+const authErrorText = document.getElementById('auth-error-text');
 
 const nameGroup = document.getElementById('name-group');
 const passConfirmGroup = document.getElementById('password-confirm-group');
@@ -35,8 +37,10 @@ const taskList = document.getElementById('task-list');
 const newTaskBtn = document.getElementById('new-task-btn');
 const taskModal = document.getElementById('task-modal');
 const closeModalBtn = document.getElementById('close-modal');
+const cancelModalBtn = document.getElementById('cancel-modal');
 const taskForm = document.getElementById('task-form');
 const taskError = document.getElementById('task-error');
+const taskErrorText = document.getElementById('task-error-text');
 
 // Pagination/Filter DOM
 const searchBtn = document.getElementById('search-btn');
@@ -72,7 +76,7 @@ function showDashboard() {
     authSection.classList.add('hidden');
     dashSection.classList.remove('hidden');
     navMenu.classList.remove('hidden');
-    if (user) welcomeMsg.textContent = `Hello, ${user.name}`;
+    if (user) welcomeMsg.textContent = `${user.name}`;
 }
 
 function toggleAuthMode(e) {
@@ -81,8 +85,9 @@ function toggleAuthMode(e) {
     authError.classList.add('hidden');
     
     if (isLoginMode) {
-        authTitle.textContent = 'Login to Your Account';
-        authSubmitBtn.textContent = 'Login';
+        authTitle.textContent = 'Welcome Back';
+        authSubtitle.textContent = 'Log in to manage your tasks beautifully.';
+        authSubmitBtn.innerHTML = `Access Account <i class='bx bx-right-arrow-alt'></i>`;
         nameGroup.classList.add('hidden');
         passConfirmGroup.classList.add('hidden');
         nameInput.required = false;
@@ -90,7 +95,8 @@ function toggleAuthMode(e) {
         document.getElementById('auth-toggle-text').innerHTML = `Don't have an account? <a href="#" id="toggle-auth-link">Register here</a>`;
     } else {
         authTitle.textContent = 'Create an Account';
-        authSubmitBtn.textContent = 'Register';
+        authSubtitle.textContent = 'Join us and boost your productivity.';
+        authSubmitBtn.innerHTML = `Register Account <i class='bx bx-user-plus'></i>`;
         nameGroup.classList.remove('hidden');
         passConfirmGroup.classList.remove('hidden');
         nameInput.required = true;
@@ -150,7 +156,7 @@ async function handleAuth(e) {
         authForm.reset();
         checkAuth();
     } catch (error) {
-        authError.textContent = error.message;
+        authErrorText.textContent = error.message;
         authError.classList.remove('hidden');
     }
 }
@@ -170,6 +176,7 @@ async function handleLogout() {
 // --- Task Actions ---
 async function fetchTasks(page = 1) {
     try {
+        taskList.innerHTML = `<div class="loading-state"><i class='bx bx-loader-alt bx-spin'></i> Loading tasks...</div>`;
         let url = `/tasks?page=${page}`;
         if (currentFilters.status) url += `&status=${currentFilters.status}`;
         if (currentFilters.search) url += `&search=${currentFilters.search}`;
@@ -179,31 +186,35 @@ async function fetchTasks(page = 1) {
         updatePagination(res.data);
     } catch (error) {
         console.error("Failed fetching tasks:", error);
+        taskList.innerHTML = `<div class="loading-state" style="color:var(--danger)"><i class='bx bx-error'></i> Failed to load tasks.</div>`;
     }
 }
 
 function renderTasks(tasks) {
     taskList.innerHTML = '';
     if (tasks.length === 0) {
-        taskList.innerHTML = `<p style="text-align: center; color: #6b7280; padding: 2rem;">No tasks found.</p>`;
+        taskList.innerHTML = `<div class="loading-state"><i class='bx bx-folder-open'></i> <p>No tasks found.</p></div>`;
         return;
     }
 
     tasks.forEach(task => {
         const el = document.createElement('div');
         el.className = 'task-card';
+        
+        const statusIcon = task.status === 'completed' ? `<i class='bx bx-check-circle'></i>` : `<i class='bx bx-time-five'></i>`;
+        
         el.innerHTML = `
             <div class="task-info">
                 <h3>${task.title}</h3>
-                <p class="task-desc">${task.description || ''}</p>
+                <p class="task-desc">${task.description || 'No description provided.'}</p>
                 <div class="task-meta">
-                    <span class="badge ${task.status}">${task.status}</span>
-                    ${task.due_date ? `<span>📅 Due: ${task.due_date}</span>` : ''}
+                    <span class="badge ${task.status}">${statusIcon} ${task.status.charAt(0).toUpperCase() + task.status.slice(1)}</span>
+                    ${task.due_date ? `<span class="task-date"><i class='bx bx-calendar'></i> ${task.due_date}</span>` : ''}
                 </div>
             </div>
             <div class="task-actions">
-                <button class="edit-btn" onclick="openEditModal(${task.id})">Edit</button>
-                <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+                <button class="edit-btn" onclick="openEditModal(${task.id})"><i class='bx bx-edit-alt'></i> Edit</button>
+                <button class="delete-btn" onclick="deleteTask(${task.id})"><i class='bx bx-trash'></i> Delete</button>
             </div>
         `;
         taskList.appendChild(el);
@@ -231,13 +242,13 @@ async function handleTaskSubmit(e) {
         closeModal();
         fetchTasks(currentPage);
     } catch (error) {
-        taskError.textContent = error.message;
+        taskErrorText.textContent = error.message;
         taskError.classList.remove('hidden');
     }
 }
 
 async function deleteTask(id) {
-    if(!confirm("Are you sure you want to delete this task?")) return;
+    if(!confirm("Are you sure you want to permanently delete this task?")) return;
     try {
         await apiRequest(`/tasks/${id}`, 'DELETE');
         fetchTasks(currentPage);
@@ -258,7 +269,7 @@ function openNewModal() {
 async function openEditModal(id) {
     taskError.classList.add('hidden');
     taskModal.classList.remove('hidden');
-    document.getElementById('modal-title').textContent = 'Loading...';
+    document.getElementById('modal-title').textContent = 'Loading details...';
     
     try {
         const res = await apiRequest(`/tasks/${id}`);
@@ -282,8 +293,14 @@ function closeModal() {
 // --- Pagination & Filtering Helpers ---
 function updatePagination(meta) {
     currentPage = meta.current_page;
-    pageInfo.textContent = `Page ${meta.current_page} of ${meta.last_page}`;
+    pageInfo.textContent = `Page ${meta.current_page} of ${Math.max(meta.last_page, 1)}`;
     
+    if (meta.last_page <= 1) {
+        document.getElementById('pagination-controls').classList.add('hidden');
+    } else {
+        document.getElementById('pagination-controls').classList.remove('hidden');
+    }
+
     prevBtn.disabled = !meta.prev_page_url;
     nextBtn.disabled = !meta.next_page_url;
 }
@@ -308,6 +325,7 @@ function attachEventListeners() {
 
     newTaskBtn.addEventListener('click', openNewModal);
     closeModalBtn.addEventListener('click', closeModal);
+    cancelModalBtn.addEventListener('click', closeModal);
     taskForm.addEventListener('submit', handleTaskSubmit);
 
     searchBtn.addEventListener('click', handleSearch);
